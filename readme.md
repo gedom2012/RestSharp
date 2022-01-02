@@ -1,6 +1,6 @@
 # RestSharp
 
-This a simple project to automate the tests from API layer.
+This a simple project to automate the schema validation tests on API layer.
 
 ### Nuget Dependencies
 
@@ -11,6 +11,10 @@ This a simple project to automate the tests from API layer.
 - Newtonsoft.Json version 13.0.1
 - Newtonsoft.Json.Schema version 13.0.1
 - Fluent Assertions version 5.10.3
+
+### Generate Schemas.json
+
+https://quicktype.io/
 
 ### For Testing Execution from project solution root
 
