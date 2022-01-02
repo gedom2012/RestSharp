@@ -1,80 +1,85 @@
-using System;
-using FluentAssertions;
-//using RestSharp;
-//using Newtonsoft.Json.Linq;
-//using RestSharp.Serializers.Utf8Json;
 using NUnit.Framework;
-
+using RestSharp;
+using TestRestAPI.ResourcesFactory;
 
 namespace TestRestAPI
 {
     public class TestSamples : TestSamplesBase
     {
+        private string _response;
 
-       //[Test]
-        public void TestInsertWorkToolWithSuccess() 
+        [SetUp]
+        public void Setup()
         {
-            var workTool = new WorkTool
-            {
-                Name = "Ferramenta de teste 999",
-                SerialNumber = "989855541111",
-                IsActive = true,
-                ExternalPartner = new ExternalPartner { Id = 10, SiteId = 2 },
-                WorkToolType = new WorkToolType { Id= 1, SiteId= 2 }          
-
-            };
-         
-            Request("site-safety-coordination/external-partner/work-tools");
-            RequestType("POST", "joao@external.com", "12345678");
-            RequestBody(workTool);
-            Response().StatusCode.Should().Be(200);
+            var obj = WorkToolFactory.CreateWorkTool();
+            _response = NewRequest(Method.POST, "insert/the/route", obj).Content;
         }
 
-        [Test]     
-        public void getWorkToolList()
-        {       
-            Request("site-safety-coordination/external-partner/work-tools");
-            RequestType("GET", "joao@external.com", "12345678"); 
-            Response().StatusCode.Should().Be(200);
-        }        
-
-        /*
-         * TO DO IMPLEMENT
-        
         [Test]
-        public void InsertCompanyDocumentation()
+        public void Create_Work_Tool_Should_Be_Return_Success()
         {
-            var document = new Document
-            {
-                Name = "Rosetta",
-                Description = "Description",
-                Identity = new Identity 
-                { 
-                    Id = 10, 
-                    SiteId = 2 
-                },
-                DocumentType = new DocumentType 
-                {
-                    Name = "Declaração de não divida à Autoridade Tributaria",
-                    Id = 18,
-                    SiteId = 2
-                }
-            };         
-           
-            var client = new RestClient("http://urano.eqs.local:8096/api/");
-            client.UseUtf8Json();
-            var request = new RestRequest("site-safety-coordination/external-partner/documents", Method.POST);       
-            request.AddHeader("Authorization", GetToken("joao@external.com", "12345678"));
-          //  request.AddHeader("Content-Type", "multipart/form-data");
-            request.AddFile("rosetta", "/workspace/TestRestAPI/TestRestAPI/Resources/rosetta.txt", "multipart/form-data");           
-            request.AddParameter("document", document, "multipart/form-data",  ParameterType.RequestBody);            
-            var resp = client.Execute(request);
-            Console.WriteLine(resp.Content);
-            resp.StatusCode.Should().Be(200);
-            
-
+            Assert.True(ValidateSchemaJson(_response, "Schema.json"));
         }
-         
-         */
+
+        [Test]
+        public void Get_Work_Tool_List_Should_Be_Return_Success()
+        {
+            var resp = NewRequest(Method.GET, "insert/the/route").Content;
+
+            Assert.True(ValidateSchemaJson(resp, "Schema.json"));
+        }
+
+        [Test]
+        public void Get_Work_Tool_Should_Be_Return_Success()
+        {
+            var id = ExtractValueFromBody(_response, "id");
+
+            var resp = NewRequest(Method.GET, $"insert/the/route/{id}").Content;
+
+            Assert.True(ValidateSchemaJson(resp, "Schema.json"));
+        }
+
+        [Test]
+        public void Search_Work_Tool_Should_Be_Return_Success()
+        {
+            string searchParameter = "work tool";
+            var id = ExtractValueFromBody(_response, "id");
+
+            var resp = NewRequest(Method.GET, $"insert/the/route/{id}", searchParameter).Content;
+
+            Assert.True(ValidateSchemaJson(resp, "Schema.json"));
+        }
+
+        [Test]
+        public void Update_Work_Tool_Should_Be_Return_Success()
+        {
+            var id = ExtractValueFromBody(_response, "id");
+            var obj = WorkToolFactory.EditWorkTool();
+
+            var resp = NewRequest(Method.PUT, $"insert/the/route/{id}", obj).Content;
+
+            Assert.True(ValidateSchemaJson(resp, "Schema.json"));
+        }
+
+        public void Update_Work_Tool_Document_Should_Be_Return_Success()
+        {
+            string documentName = "rosetta.txt";
+            var id = ExtractValueFromBody(_response, "id");
+            var obj = WorkToolFactory.EditWorkTool();
+
+            var resp = NewRequest(Method.PUT, $"insert/the/route/{id}", obj, documentName).Content;
+
+            Assert.True(ValidateSchemaJson(resp, "Schema.json"));
+        }
+
+        public void Delete_Work_Tool_Should_Be_Return_Success()
+        {
+            var id = ExtractValueFromBody(_response, "id");
+
+            var resp = NewRequest(Method.DELETE, $"insert/the/route/{id}").Content;
+
+            Assert.True(ValidateSchemaJson(resp, "Schema.json"));
+        }
+
     }
 }

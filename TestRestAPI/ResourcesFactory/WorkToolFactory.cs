@@ -1,23 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TestRestAPI.ResourcesFactory
+﻿namespace TestRestAPI.ResourcesFactory
 {
-    class WorkToolFactory: TestSamplesBase
+    class WorkToolFactory : TestSamplesBase
     {
-        public WorkTool WorkTool()
+        public static WorkTool CreateWorkTool()
         {
-            var workTool = new WorkTool
+            var obj = new WorkTool
             {
-                Name = "Ferramenta de teste 03",
-                SerialNumber = "9876541111",
+                Name = "Work Tool test 01",
+                SerialNumber = "8888888888",
                 IsActive = true,
                 ExternalPartner = new ExternalPartner { Id = 10, SiteId = 2 },
                 WorkToolType = new WorkToolType { Id = 1, SiteId = 2 }
 
             };
-            return workTool;
+            return obj;
+        }
+
+        public static WorkTool EditWorkTool()
+        {
+            var obj = new WorkTool
+            {
+                Name = "Ferramenta de teste 02",
+                SerialNumber = "99999999",
+                IsActive = false,
+                ExternalPartner = new ExternalPartner { Id = 10, SiteId = 2 },
+                WorkToolType = new WorkToolType { Id = 1, SiteId = 2 }
+
+            };
+            return obj;
         }
     }
 }
